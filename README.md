@@ -10,12 +10,12 @@ python scaffold.py
 
 ## Steps
 
-- [ ] **1.** load_base_model_and_tokenizer
+- [x] **1.** load_base_model_and_tokenizer
 - [ ] **2.** count_total_parameters
 - [ ] **3.** is_model_4bit_quantized
 - [ ] **4.** ensure_pad_token
 - [x] **5.** get_lora_target_modules
-- [ ] **6.** attach_lora_adapters
+- [x] **6.** attach_lora_adapters
 - [ ] **7.** count_trainable_parameters
 - [ ] **8.** trainable_fraction
 - [ ] **9.** build_instruction_examples

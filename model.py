@@ -6,8 +6,20 @@ Assembled from your step-by-step solutions.
 
 import numpy as np
 
-# Step 1 - load_base_model_and_tokenizer (not yet solved)
-# TODO: implement
+# Step 1 - load_base_model_and_tokenizer
+def load_base_model_and_tokenizer(model_name='unsloth/Qwen2.5-0.5B-Instruct-bnb-4bit', max_seq_length=256):
+    """Load a 4-bit quantized causal LM and its tokenizer via Unsloth.
+
+    Returns:
+        (model, tokenizer)
+    """
+    from unsloth import FastLanguageModel
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name=model_name,
+        max_seq_length=max_seq_length,
+        load_in_4bit=True,
+    )
+    return model, tokenizer
 
 # Step 2 - count_total_parameters (not yet solved)
 # TODO: implement
@@ -23,8 +35,20 @@ def get_lora_target_modules():
     """Return the attention projection module name suffixes for LoRA."""
     return ['q_proj', 'k_proj', 'v_proj', 'o_proj']
 
-# Step 6 - attach_lora_adapters (not yet solved)
-# TODO: implement
+# Step 6 - attach_lora_adapters
+def attach_lora_adapters(model, r=8, lora_alpha=16, target_modules=None):
+    """Wrap the base model with LoRA adapters and return the PEFT model."""
+    if target_modules is None:
+        target_modules = get_lora_target_modules()
+    model = FastLanguageModel.get_peft_model(
+        model,
+        r=r,
+        target_modules=target_modules,
+        lora_alpha=lora_alpha,
+        lora_dropout=0,
+        bias="none",
+    )
+    return model
 
 # Step 7 - count_trainable_parameters (not yet solved)
 # TODO: implement
