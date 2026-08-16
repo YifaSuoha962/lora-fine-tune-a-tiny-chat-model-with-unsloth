@@ -121,8 +121,11 @@ def tokenize_text(tokenizer, text):
     # pad等操作交给DataCollator 去做
     return tokenizer(text)['input_ids']
 
-# Step 14 - count_tokens (not yet solved)
-# TODO: implement
+# Step 14 - count_tokens
+def count_tokens(input_ids):
+    """Return the number of tokens in a tokenized example."""
+    # TODO: return the length of the input_ids sequence
+    return len(input_ids)
 
 # Step 15 - build_training_arguments (not yet solved)
 # TODO: implement
