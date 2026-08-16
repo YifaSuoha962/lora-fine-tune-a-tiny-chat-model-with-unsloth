@@ -118,6 +118,7 @@ def build_text_dataset(texts):
 def tokenize_text(tokenizer, text):
     """Tokenize a single string and return a list[int] of input ids."""
     # TODO: call the tokenizer on text and return its input_ids as a plain list
+    # pad等操作交给DataCollator 去做
     return tokenizer(text)['input_ids']
 
 # Step 14 - count_tokens (not yet solved)
