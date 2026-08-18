@@ -128,16 +128,32 @@ def count_tokens(input_ids):
     return len(input_ids)
 
 # Step 15 - build_training_arguments
-from transformers import TrainingArguments
-# from trl import SFTConfig
+# from transformers import TrainingArguments
+from trl import SFTConfig
 import torch
 
 def build_training_arguments(output_dir='./sft_out', max_steps=5, learning_rate=2e-4):
     """Return featherweight TrainingArguments for the SFT run."""
     # TODO: build TrainingArguments with batch size 1, given max_steps, given lr, bf16 or fp16.
+    
+    """
+    基于 TrainingArguments 的构造方法导致了 SFTConfig class identity 冲突
+    """
+    # return TrainingArguments(
+    #     output_dir=output_dir,
+    #     per_device_train_batch_size=1,
+    #     gradient_accumulation_steps=1,
+    #     max_steps=max_steps,
+    #     learning_rate=learning_rate,
+    #     bf16=use_bf16,
+    #     fp16=not use_bf16,
+    #     logging_steps=1,
+    #     optim='adamw_8bit',
+    # )
+
     use_bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
     
-    return TrainingArguments(
+    return SFTConfig(
         output_dir=output_dir,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=1,
@@ -146,7 +162,17 @@ def build_training_arguments(output_dir='./sft_out', max_steps=5, learning_rate=
         bf16=use_bf16,
         fp16=not use_bf16,
         logging_steps=1,
-        optim='adamw_8bit',
+        optim="adamw_8bit",
+
+        dataloader_num_workers=0,
+        dataset_num_proc=1,
+
+        save_strategy="no",
+        report_to="none",
+
+        dataset_text_field="text",
+        max_length=256,
+        packing=False,
     )
 
 # Step 16 - build_sft_trainer
