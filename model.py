@@ -129,6 +129,7 @@ def count_tokens(input_ids):
 
 # Step 15 - build_training_arguments
 from transformers import TrainingArguments
+# from trl import SFTConfig
 import torch
 
 def build_training_arguments(output_dir='./sft_out', max_steps=5, learning_rate=2e-4):
@@ -166,8 +167,12 @@ def build_sft_trainer(model, tokenizer, dataset, training_args, max_seq_length=2
     
     return trainer
 
-# Step 17 - run_sft_training (not yet solved)
-# TODO: implement
+# Step 17 - run_sft_training
+def run_sft_training(trainer):
+    """Run a few SFT steps and return the final training loss as a float."""
+    # TODO: drive the trainer through its short optimization run and return the final loss
+    result = trainer.train()
+    return float(result.training_loss)
 
 # Step 18 - switch_to_inference_mode (not yet solved)
 # TODO: implement
