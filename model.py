@@ -281,8 +281,14 @@ def generate_reply(model, tokenizer, prompt, max_new_tokens=32):
         max_new_tokens=max_new_tokens,
         do_sample=False,
     )
+    """
+    Outputs 里是带着 prompt 的 !
+    """
 
     # Keep only newly generated tokens, excluding the original prompt
+    """
+    第一维对应 batch size
+    """
     new_tokens = outputs[0, prompt_length:]
 
     # Decode generated reply only
