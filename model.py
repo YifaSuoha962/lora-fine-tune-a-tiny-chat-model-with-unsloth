@@ -200,6 +200,40 @@ def run_sft_training(trainer):
     result = trainer.train()
     return float(result.training_loss)
 
+"""
+报错记录: 基于 transformers.TrainingArguments 实现的 build_training_arguments 引发
+    PicklingError:
+    Can't pickle <class 'trl.trainer.sft_config.SFTConfig'>:
+    it's not the same object as trl.trainer.sft_config.SFTConfig
+这类 Python 错误通常意味着一个模块被重复加载过。
+
+原因追溯 -- 两个config在字段上看起来一样，但Python编译器的理解为：
+    - 当前被序列化的对象所属的 SFTConfig class，和当前 trl.trainer.sft_config 模块中
+      注册的 SFTConfig class，不是同一个 Python class object。
+    - 即 trainer.args (015) -> class <- trl.trainer.sft_config.SFTConfig (016)
+    - 在training调用时，显式传入的是 TrainingArguments，但错误却来自: trl.trainer.sft_config.SFTConfig
+      说明 SFTTrainer 内部实际上需要处理 TRL 自己的 SFT-specific configuration。
+
+总结成一条错误链：
+    transformers.TrainingArguments
+                ↓
+        传给 SFTTrainer
+                ↓
+    TRL / Unsloth 对配置进行 SFT-specific 处理
+                ↓
+        涉及 SFTConfig
+                ↓
+    运行环境中的 SFTConfig class identity 不一致
+                ↓
+    trainer.train()
+                ↓
+    某个需要序列化 args/config 的阶段
+                ↓
+    pickle(SFTConfig)
+                ↓
+    PicklingError
+"""
+
 # Step 18 - switch_to_inference_mode (not yet solved)
 # TODO: implement
 
