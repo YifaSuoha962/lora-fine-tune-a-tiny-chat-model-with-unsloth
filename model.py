@@ -234,8 +234,15 @@ def run_sft_training(trainer):
     PicklingError
 """
 
-# Step 18 - switch_to_inference_mode (not yet solved)
-# TODO: implement
+# Step 18 - switch_to_inference_mode
+def switch_to_inference_mode(model):
+    """Switch the LoRA-tuned model into Unsloth's fast inference mode and return it."""
+    # TODO: call the Unsloth helper that prepares the model for fast generation
+    
+    from unsloth import FastLanguageModel
+    FastLanguageModel.for_inference(model) # Enable native 2x faster inference
+    
+    return model
 
 # Step 19 - build_chat_prompt (not yet solved)
 # TODO: implement
